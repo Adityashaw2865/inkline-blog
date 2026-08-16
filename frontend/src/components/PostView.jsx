@@ -13,7 +13,7 @@ export default function PostView({ post, onBack, onToggleLike, onAddComment, isL
     e.preventDefault()
     const text = commentText.trim()
     if (!text) return
-    onAddComment(post.id, text)
+    onAddComment(post._id, text)
     setCommentText('')
   }
 

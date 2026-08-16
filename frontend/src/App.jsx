@@ -52,7 +52,7 @@ useEffect(() => {
 
   // Navigate to the post view for a given post, incrementing its view count
   function openPost(id) {
-    setPosts(prev => prev.map(p => (p.id === id ? { ...p, views: p.views + 1 } : p)))
+    setPosts(prev => prev.map(p => (p._id === id ? { ...p, views: p.views + 1 } : p)))
     setActivePostId(id)
     setCurrentView('post')
     window.scrollTo({ top: 0, behavior: 'smooth' })

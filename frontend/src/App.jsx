@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import Header from './components/Header.jsx'
 import Home from './components/Home.jsx'
@@ -60,8 +59,12 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Toggle like/unlike on a post by id
+  // Toggle like/unlike on a post by id — requires login
   async function toggleLike(id) {
+    if (!isLoggedIn) {
+      setShowLoginModal(true)
+      return
+    }
     try {
       const token = localStorage.getItem('token')
       const res = await fetch(`http://localhost:3001/api/posts/${id}/like`, {

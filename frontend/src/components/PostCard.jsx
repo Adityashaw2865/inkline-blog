@@ -36,9 +36,9 @@ export default function PostCard({ post, onOpen, onToggleLike }) {
 
       <div className="post-meta">
         <div className="avatar">
-          {post.author.split(' ').map(n => n[0]).join('')}
+          {post.author?.name?.split(' ').map(n => n[0]).join('') || '?'}
         </div>
-        <span>{post.author}</span>
+        <span>{post.author?.name || 'Unknown'}</span>
         <span className="meta-stats">
           <span>{estimateReadTime(post.body)} min read</span>
           <span>{post.views} views</span>

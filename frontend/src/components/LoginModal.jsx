@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_URL } from '../config.js'
 
 // ============================================================
 // LOGIN / SIGNUP MODAL — same modal, toggles between two modes.
@@ -25,7 +26,7 @@ export default function LoginModal({ onClose, onLogin }) {
     const payload = isSignup ? { name, email, password } : { email, password }
 
     try {
-      const res = await fetch(`http://localhost:3001/api/auth/${endpoint}`, {
+      const res = await fetch(`${API_URL}/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

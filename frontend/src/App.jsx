@@ -6,6 +6,7 @@ import WriteView from './components/WriteView.jsx'
 import LoginModal from './components/LoginModal.jsx'
 import Toast from './components/Toast.jsx'
 import ProgressBar from './components/ProgressBar.jsx'
+import { API_URL } from './config.js'
 
 // ============================================================
 // APP — the top-level component.
@@ -17,7 +18,7 @@ export default function App() {
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/posts')
+    fetch(`${API_URL}/api/posts`)
       .then(res => res.json())
       .then(data => setPosts(data))
       .catch(err => console.error('Error fetching posts:', err))
@@ -67,7 +68,7 @@ export default function App() {
     }
     try {
       const token = localStorage.getItem('token')
-      const res = await fetch(`http://localhost:3001/api/posts/${id}/like`, {
+      const res = await fetch(`${API_URL}/api/posts/${id}/like`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +89,7 @@ export default function App() {
   // Add a new comment to a specific post
   async function addComment(id, text) {
     try {
-      const res = await fetch(`http://localhost:3001/api/posts/${id}/comments`, {
+      const res = await fetch(`${API_URL}/api/posts/${id}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: isLoggedIn ? 'You' : 'Guest', text }),
@@ -108,7 +109,7 @@ export default function App() {
   async function addPost({ title, tag, body }) {
     try {
       const token = localStorage.getItem('token')
-      const res = await fetch('http://localhost:3001/api/posts', {
+      const res = await fetch(`${API_URL}/api/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

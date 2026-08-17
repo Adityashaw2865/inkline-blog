@@ -13,7 +13,7 @@ export default function PostView({ post, onBack, onToggleLike, onAddComment, isL
     e.preventDefault()
     const text = commentText.trim()
     if (!text) return
-    onAddComment(post.id, text)
+    onAddComment(post._id, text)
     setCommentText('')
   }
 
@@ -28,8 +28,8 @@ export default function PostView({ post, onBack, onToggleLike, onAddComment, isL
         <h1>{post.title}</h1>
 
         <div className="post-meta">
-          <div className="avatar">{post.author.split(' ').map(n => n[0]).join('')}</div>
-          <span>{post.author}</span>
+          <div className="avatar">{post.author?.name?.split(' ').map(n => n[0]).join('') || '?'}</div>
+          <span>{post.author?.name || 'Unknown'}</span>
           <span>&middot;</span>
           <span>{post.date}</span>
           <span className="meta-stats">

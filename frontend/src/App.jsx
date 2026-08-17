@@ -6,26 +6,22 @@ import WriteView from './components/WriteView.jsx'
 import LoginModal from './components/LoginModal.jsx'
 import Toast from './components/Toast.jsx'
 import ProgressBar from './components/ProgressBar.jsx'
-import initialPosts from './data/posts.js'
 
 // ============================================================
 // APP — the top-level component.
 // All shared state (posts, current view, login status) lives here
-// and gets passed down to children as props. This is the simplest
-// state-management approach for a small app; later you could swap
-// this for Context API or Redux if the app grows.
+// and gets passed down to children as props.
 // ============================================================
 export default function App() {
-  // All blog posts. Later this will come from the backend:
-  // useEffect(() => { fetch('http://localhost:5000/api/posts').then(...) }, [])
+  // All blog posts — fetched from the backend API on first load
   const [posts, setPosts] = useState([])
 
-useEffect(() => {
-  fetch('http://localhost:3001/api/posts')
-    .then(res => res.json())
-    .then(data => setPosts(data))
-    .catch(err => console.error('Error fetching posts:', err))
-}, [])
+  useEffect(() => {
+    fetch('http://localhost:3001/api/posts')
+      .then(res => res.json())
+      .then(data => setPosts(data))
+      .catch(err => console.error('Error fetching posts:', err))
+  }, [])
 
   // Which "page" is currently visible: 'home' | 'post' | 'write'
   const [currentView, setCurrentView] = useState('home')
@@ -52,7 +48,7 @@ useEffect(() => {
 
   // Navigate to the post view for a given post, incrementing its view count
   function openPost(id) {
-    setPosts(prev => prev.map(p => (p.id === id ? { ...p, views: p.views + 1 } : p)))
+    setPosts(prev => prev.map(p => (p._id === id ? { ...p, views: p.views + 1 } : p)))
     setActivePostId(id)
     setCurrentView('post')
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -63,8 +59,12 @@ useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Toggle like/unlike on a post by id
+  // Toggle like/unlike on a post by id — requires login
   async function toggleLike(id) {
+    if (!isLoggedIn) {
+      setShowLoginModal(true)
+      return
+    }
     try {
       const token = localStorage.getItem('token')
       const res = await fetch(`http://localhost:3001/api/posts/${id}/like`, {
@@ -83,7 +83,7 @@ useEffect(() => {
     } catch (err) {
       showToast('Something went wrong')
     }
-}
+  }
 
   // Add a new comment to a specific post
   async function addComment(id, text) {
@@ -102,9 +102,9 @@ useEffect(() => {
     } catch (err) {
       showToast('Something went wrong')
     }
-}
-  // Add a brand-new post (from the Write form)
+  }
 
+  // Add a brand-new post (from the Write form)
   async function addPost({ title, tag, body }) {
     try {
       const token = localStorage.getItem('token')
@@ -127,14 +127,14 @@ useEffect(() => {
     } catch (err) {
       showToast('Something went wrong')
     }
-}
+  }
 
   function handleLogin(user, token) {
     setIsLoggedIn(true)
     localStorage.setItem('token', token) // save token for later API calls
     setShowLoginModal(false)
     showToast('Logged in successfully')
-}
+  }
 
   function handleLogout() {
     setIsLoggedIn(false)

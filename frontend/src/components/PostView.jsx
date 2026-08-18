@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { estimateReadTime } from './PostCard.jsx'
+import { estimateReadTime, formatPostDate } from './PostCard.jsx'
 
 // ============================================================
 // POST VIEW — full article page: title, body, like/bookmark
@@ -31,7 +31,7 @@ export default function PostView({ post, onBack, onToggleLike, onAddComment, isL
           <div className="avatar">{post.author?.name?.split(' ').map(n => n[0]).join('') || '?'}</div>
           <span>{post.author?.name || 'Unknown'}</span>
           <span>&middot;</span>
-          <span>{post.date}</span>
+          <span>{formatPostDate(post.createdAt)}</span>
           <span className="meta-stats">
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

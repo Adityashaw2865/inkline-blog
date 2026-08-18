@@ -8,6 +8,21 @@ export function estimateReadTime(html) {
 }
 
 // ============================================================
+// Shared helper — format the backend's `createdAt` timestamp into
+// a readable date string (e.g. "Aug 12, 2026").
+// NOTE: backend sends `createdAt`, not `date` — this fixes the
+// mismatch where the UI used to look for a non-existent `post.date`.
+// ============================================================
+export function formatPostDate(createdAt) {
+  if (!createdAt) return ''
+  return new Date(createdAt).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
+// ============================================================
 // POST CARD — a single post preview shown in the home grid.
 // Clicking the card opens the post; clicking the like button
 // toggles the like WITHOUT opening the post (stopPropagation).
@@ -39,6 +54,8 @@ export default function PostCard({ post, onOpen, onToggleLike }) {
           {post.author?.name?.split(' ').map(n => n[0]).join('') || '?'}
         </div>
         <span>{post.author?.name || 'Unknown'}</span>
+        <span>&middot;</span>
+        <span>{formatPostDate(post.createdAt)}</span>
         <span className="meta-stats">
           <span>{estimateReadTime(post.body)} min read</span>
           <span>{post.views} views</span>

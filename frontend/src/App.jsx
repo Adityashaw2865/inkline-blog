@@ -34,6 +34,14 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
 
+  // On first load, check if a token already exists in localStorage
+  // (e.g. from a previous session) so the UI doesn't reset to
+  // "logged out" every time the page is refreshed.
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) setIsLoggedIn(true)
+  }, [])
+
   // Toast notification message (empty string = hidden)
   const [toastMessage, setToastMessage] = useState('')
 
@@ -138,8 +146,9 @@ export default function App() {
   }
 
   function handleLogout() {
-    setIsLoggedIn(false)
-    showToast('Logged out')
+    localStorage.removeItem('token') // BUG FIX: token was never cleared before, so it
+    setIsLoggedIn(false)             // silently stuck around and would "log the user
+    showToast('Logged out')          // back in" once the refresh-persist check was added.
   }
 
   const activePost = posts.find(p => p._id === activePostId)
